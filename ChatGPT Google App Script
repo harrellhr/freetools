@@ -1,0 +1,52 @@
+// set your OpenAI API Key
+var OPEN_AI_API_KEY = '';
+
+// import the URL Fetch Service
+var UrlFetchApp = UrlFetchApp;
+
+function callChatGptFour32k(message) {
+  var url = 'https://api.openai.com/v1/chat/completions';
+
+  var options = {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + OPEN_AI_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    payload: JSON.stringify({
+      'model': 'gpt-3.5-turbo-16k',
+      'messages': [
+        {
+          'role': 'system',
+          'content': 'You are a helpful assistant.'
+        },
+        {
+          'role': 'user',
+          'content': message
+        }
+      ]
+    }),
+    muteHttpExceptions: true
+  };
+
+  try {
+    var response = UrlFetchApp.fetch(url, options);
+    var content = JSON.parse(response.getContentText());
+
+    if (content.choices && content.choices.length > 0) {
+      // Return the response to the cell
+      return content.choices[0].message.content.trim();
+    } else if (content.error) {
+      // Display the error message
+      return 'Error: ' + content.error.message;
+    } else {
+      // Display a generic error message
+      return 'Error: Unexpected API response';
+    }
+  } catch (error) {
+    // Log the error and return a generic error message
+    Logger.log('Error: ' + error.toString());
+    return 'Error: ' + error.toString();
+  }
+}
+
