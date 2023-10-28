@@ -4,7 +4,7 @@ var OPEN_AI_API_KEY = '';
 // import the URL Fetch Service
 var UrlFetchApp = UrlFetchApp;
 
-function callChatGptFour32k(message) {
+function callChatGpt(message) {
   var url = 'https://api.openai.com/v1/chat/completions';
 
   var options = {
